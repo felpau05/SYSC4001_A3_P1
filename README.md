@@ -1,1 +1,94 @@
-.
+# SYSC 4001 – Assignment 3 (Part 1)
+
+This project implements three CPU scheduling algorithms for a single-CPU system with fixed memory partitions:
+
+- **RR** – Round Robin (100 ms quantum)
+- **EP** – External Priority (non-preemptive)
+- **EP_RR** – External Priority + Round Robin (preemptive + quantum)
+
+The simulator models:
+
+- Process states: `NOT_ASSIGNED`, `NEW`, `READY`, `RUNNING`, `WAITING`, `TERMINATED`
+- Fixed-size memory partitions and first-fit allocation
+- CPU bursts with optional I/O
+- Basic performance metrics, written at the end of each run into `execution.txt`
+
+---
+
+## Features
+
+- **Three schedulers in separate executables**
+  - `RR` – time-sliced, no priority
+  - `EP` – external priorities, non-preemptive
+  - `EP_RR` – preemptive priority with RR within each priority level
+- **State-based simulation**
+  - Explicit transitions between all OS process states
+  - Every transition logged with timestamp, PID, old state, new state
+- **Memory management**
+  - Fixed partitions (40, 25, 15, 10, 8, 2)
+  - First-fit assignment when a process becomes `NEW`
+  - Partition released when the process terminates
+- **I/O modelling**
+  - CPU time counted per process
+  - I/O requested every `io_freq` ms of CPU time (if `io_freq > 0`)
+  - Process moves to `WAITING` for `io_duration` ms, then returns to `READY`
+- **Batch test runner**
+  - `run_all.sh` runs **all** `.txt` traces in `input_files/` with **all three** schedulers
+  - Outputs stored in `output_files/` as `<basename>_<SCHED>.txt`
+
+---
+
+## Design choices & assumptions
+
+### Priorities
+
+- The original assignment spec (older PDF) used **external priorities** (separate input column).
+- A later clarification changed this to “lower PID = higher priority”.
+- This implementation keeps the **external priority** model for flexibility:
+
+  - If the input line has **7 fields**, the 7th field is treated as `priority`.
+  - Lower `priority` value = higher priority (e.g., 0 is highest).
+  - If the input has only **6 fields**, `priority` defaults to `0` for all processes.
+  - With equal priorities, `EP_RR` collapses to standard Round Robin, and `EP` collapses to FCFS.
+
+### Context switch overhead
+
+- Context switches (save/restore, mode switch, vector lookup, etc.) are **ignored** in this Part 1 scheduler simulator.
+- Time advances only due to:
+  - CPU execution
+  - I/O duration
+
+### “Too large for memory” processes
+
+- Memory partitions are fixed: `[40, 25, 15, 10, 8, 2]`.
+- If a process’s `size` is **greater than 40**, it can never be placed in any partition:
+  - It still appears as `NOT_ASSIGNED → NEW` at arrival.
+  - It is **never** moved to `READY` or `RUNNING`.
+  - The termination check ignores such processes (they do not block simulation termination).
+
+### Event ordering (for a RUNNING process in a 1 ms tick)
+
+For each simulated millisecond when a process is `RUNNING`, the scheduler resolves events in this order:
+
+1. **Check if the process has completed** its CPU burst  
+   - If yes: `RUNNING → TERMINATED` and the partition is freed.
+2. **Check if the process must issue I/O**  
+   - Based on accumulated CPU time (`total_cpu_time % io_freq == 0`).  
+   - If yes: `RUNNING → WAITING`, `io_duration` ms queued, no further checks for that tick.
+3. **(EP_RR only)** Check if a higher-priority process is READY  
+   - If such a process exists: preempt current process, `RUNNING → READY`, and schedule the higher priority one.
+4. **(RR / EP_RR)** Check for **quantum expiry** (100 ms)  
+   - If the quantum is consumed and **another READY process** of same or higher priority exists:
+     - `RUNNING → READY`, process re-queued at the tail of its level.
+   - If no competitor exists at that priority, the process continues to run.
+
+EP (external priority, non-preemptive) only uses step 1 and 2; preemption does not occur mid-burst.
+
+---
+
+## Input format
+
+Each line in an input file has either **6** or **7** comma-separated fields:
+
+```text
+PID, size, arrival_time, cpu_burst, io_freq, io_duration[, priority]
