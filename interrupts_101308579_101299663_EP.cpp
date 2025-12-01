@@ -1,11 +1,14 @@
 /**
- * @file interrupts.cpp
- * @author Sasisekhar Govind
- * @brief template main.cpp file for Assignment 3 Part 1 of SYSC4001
+ * @file interrupts_101308579_101299663_EP.cpp
+ * @author Ajay Uppal 101308579
+ * @author Paul Felfli 101299663
+ * @brief Assignment 3 Part 1 of SYSC4001
  * 
  */
 
-#include<interrupts_101308579_101299663.hpp>
+#include"interrupts_101308579_101299663.hpp"
+#include<map>
+#include<algorithm> 
 
 void FCFS(std::vector<PCB> &ready_queue) {
     std::sort( 
@@ -21,11 +24,8 @@ std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std
 
     std::vector<PCB> ready_queue;   //The ready queue of processes
     std::vector<PCB> wait_queue;    //The wait queue of processes
-    std::vector<PCB> job_list;      //A list to keep track of all the processes. This is similar
-                                    //to the "Process, Arrival time, Burst time" table that you
-                                    //see in questions. You don't need to use it, I put it here
-                                    //to make the code easier :).
 
+    //ms
     unsigned int current_time = 0;
     PCB running;
 
@@ -37,39 +37,178 @@ std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std
     //make the output table (the header row)
     execution_status = print_exec_header();
 
-    //Loop while till there are no ready or waiting processes.
-    //This is the main reason I have job_list, you don't have to use it.
-    while(!all_process_terminated(job_list) || job_list.empty()) {
+    // Helper: get pointer to the PCB in the master list by PID
+    auto get_process = [&](int pid) -> PCB* {
+        for (auto &p : list_processes) {
+            if (p.PID == pid) {
+                return &p;
+            }
+        }
+        return nullptr;
+    };
 
-        //Inside this loop, there are three things you must do:
-        // 1) Populate the ready queue with processes as they arrive
-        // 2) Manage the wait queue
-        // 3) Schedule processes from the ready queue
+    while (!all_process_terminated(list_processes)) {
 
-        //Population of ready queue is given to you as an example.
-        //Go through the list of proceeses
-        for(auto &process : list_processes) {
-            if(process.arrival_time == current_time) {//check if the AT = current time
-                //if so, assign memory and put the process into the ready queue
-                assign_memory(process);
+        // 1) Advance I/O for processes in WAITING
+        for (std::size_t i = 0; i < wait_queue.size(); ) {
+            int pid = wait_queue[i].PID;
+            auto it = io_remaining.find(pid);
 
-                process.state = READY;  //Set the process state to READY
-                ready_queue.push_back(process); //Add the process to the ready queue
-                job_list.push_back(process); //Add it to the list of processes
+            if (it != io_remaining.end()) {
+                if (it->second > 0) {
+                    it->second -= 1;   // 1 ms of I/O passes
+                }
+                if (it->second == 0) {
+                    // I/O finished: WAITING -> READY
+                    wait_queue[i].state = READY;
+                    execution_status += print_exec_status(current_time,
+                                                          pid,
+                                                          WAITING,
+                                                          READY);
 
-                execution_status += print_exec_status(current_time, process.PID, NEW, READY);
+                    if (PCB* p = get_process(pid)) {
+                        p->state = READY;
+                    }
+
+                    ready_queue.push_back(wait_queue[i]);
+                    wait_queue.erase(wait_queue.begin() + i);
+                    io_remaining.erase(it);
+                    continue; 
+                }
+            }
+            ++i;
+        }
+
+        // 2) Admit new arrivals 
+        for (auto &proc : list_processes) {
+            if (proc.arrival_time > current_time) {
+                continue;
+            }
+
+            // First appearance: NOT_ASSIGNED -> NEW
+            if (proc.state == NOT_ASSIGNED) {
+                proc.state = NEW;
+                execution_status += print_exec_status(current_time,
+                                                      proc.PID,
+                                                      NOT_ASSIGNED,
+                                                      NEW);
+            }
+
+            // NEW processes with no partition 
+            if (proc.state == NEW && proc.partition_number == -1) {
+                if (assign_memory(proc)) {
+                    proc.state = READY;
+                    execution_status += print_exec_status(current_time,
+                                                          proc.PID,
+                                                          NEW,
+                                                          READY);
+                    ready_queue.push_back(proc);
+                }
             }
         }
 
-        ///////////////////////MANAGE WAIT QUEUE/////////////////////////
-        //This mainly involves keeping track of how long a process must remain in the ready queue
+        // 3) If CPU is idle, dispatch next process by priority. External priorities are NON-PREEMPTIVE.
+        if (running.state != RUNNING && !ready_queue.empty()) {
+            std::sort(ready_queue.begin(), ready_queue.end(),
+                      [](const PCB &a, const PCB &b) {
+                          if (a.priority == b.priority) {
+                              return a.arrival_time < b.arrival_time;
+                          }
+                          return a.priority < b.priority;
+                      });
 
-        /////////////////////////////////////////////////////////////////
+            PCB next = ready_queue.front();
+            ready_queue.erase(ready_queue.begin());
 
-        //////////////////////////SCHEDULER//////////////////////////////
-        FCFS(ready_queue); //example of FCFS is shown here
-        /////////////////////////////////////////////////////////////////
+            // Align with master list, set RUNNING
+            PCB *p = get_process(next.PID);
+            if (p) {
+                if (p->start_time < 0) {
+                    p->start_time = static_cast<int>(current_time);
+                }
+                p->state          = RUNNING;
+                p->remaining_time = next.remaining_time;
+                running           = *p;
+            } else {
+                running = next;
+                if (running.start_time < 0) {
+                    running.start_time = static_cast<int>(current_time);
+                }
+                running.state = RUNNING;
+            }
 
+            execution_status += print_exec_status(current_time,
+                                                  running.PID,
+                                                  READY,
+                                                  RUNNING);
+        }
+
+        // 4) Execute one millisecond on the CPU (if RUNNING)
+        if (running.state == RUNNING) {
+            if (running.remaining_time > 0) {
+                running.remaining_time -= 1;
+            }
+
+            total_cpu_time[running.PID]++;
+
+            bool finished = (running.remaining_time == 0);
+            bool needs_io = false;
+
+            // I/O request based on total CPU time used (ms)
+            if (!finished && running.io_freq > 0) {
+                unsigned int used = total_cpu_time[running.PID];
+                if (used % running.io_freq == 0) {
+                    needs_io = true;
+                }
+            }
+
+            if (finished) {
+                // RUNNING -> TERMINATED
+                int pid = running.PID;
+                running.state = TERMINATED;
+                execution_status += print_exec_status(current_time,
+                                                      pid,
+                                                      RUNNING,
+                                                      TERMINATED);
+
+                free_memory(running);
+
+                if (PCB* p = get_process(pid)) {
+                    p->state          = TERMINATED;
+                    p->remaining_time = 0;
+                }
+
+                idle_CPU(running);
+            }
+            else if (needs_io) {
+                // RUNNING -> WAITING (start I/O)
+                int pid = running.PID;
+                running.state = WAITING;
+                execution_status += print_exec_status(current_time,
+                                                      pid,
+                                                      RUNNING,
+                                                      WAITING);
+
+                io_remaining[pid] = running.io_duration;
+
+                if (PCB* p = get_process(pid)) {
+                    p->state          = WAITING;
+                    p->remaining_time = running.remaining_time;
+                }
+
+                wait_queue.push_back(running);
+                idle_CPU(running);
+            }
+            else {
+                // Still RUNNING
+                if (PCB* p = get_process(running.PID)) {
+                    p->remaining_time = running.remaining_time;
+                    p->state          = RUNNING;
+                }
+            }
+        }
+
+        current_time += 1;
     }
     
     //Close the output table
