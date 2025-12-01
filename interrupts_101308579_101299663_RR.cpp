@@ -7,7 +7,7 @@
  */
 
 #include"interrupts_101308579_101299663.hpp"
-#include<map>
+#include <map>
 
 void FCFS(std::vector<PCB> &ready_queue) {
     std::sort( 
@@ -21,14 +21,14 @@ void FCFS(std::vector<PCB> &ready_queue) {
 
 static constexpr unsigned int QUANTUM_MS = 100;
 
-std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std::vector<PCB> list_processes) {
+std::tuple<std::string> run_simulation(std::vector<PCB> list_processes) {
 
     std::vector<PCB> ready_queue;   //The ready queue of processes
     std::vector<PCB> wait_queue;    //The wait queue of processes
-    std::vector<PCB> job_list;      //A list to keep track of all the processes. This is similar
-                                    //to the "Process, Arrival time, Burst time" table that you
-                                    //see in questions. You don't need to use it, I put it here
-                                    //to make the code easier :).
+    std::vector<PCB> job_list  = list_processes;      //A list to keep track of all the processes. This is similar
+                                                      //to the "Process, Arrival time, Burst time" table that you
+                                                      //see in questions. You don't need to use it, I put it here
+                                                      //to make the code easier :).
 
     unsigned int current_time = 0;
     PCB running;
@@ -48,7 +48,7 @@ std::tuple<std::string /* add std::string for bonus mark */ > run_simulation(std
     execution_status = print_exec_header();
 
     // Run until every process reaches TERMINATED
-    while(!all_process_terminated(job_list) || job_list.empty()) {
+    while (!all_process_terminated(job_list)) {
 
         // 1) Advance I/O for processes in the WAITING queue
         for (std::size_t i = 0; i < wait_queue.size(); /* increment inside */) {
