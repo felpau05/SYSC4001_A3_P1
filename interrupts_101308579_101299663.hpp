@@ -65,6 +65,7 @@ struct PCB{
     enum states     state;
     unsigned int    io_freq;
     unsigned int    io_duration;
+    unsigned int    priority; // Lower number indicates higher priority
 };
 
 //------------------------------------HELPER FUNCTIONS FOR THE SIMULATOR------------------------------
@@ -270,6 +271,13 @@ PCB add_process(std::vector<std::string> tokens) {
     process.partition_number = -1;
     process.state = NOT_ASSIGNED;
 
+    if (tokens.size() > 6) {
+        process.priority = std::stoi(tokens[6]);
+    } else {
+        process.priority = 0; // Default priority if not provided
+    }
+
+
     return process;
 }
 
@@ -313,6 +321,7 @@ void idle_CPU(PCB &running) {
     running.size = 0;
     running.state = NOT_ASSIGNED;
     running.PID = -1;
+    running.priority = 0;
 }
 
 #endif
