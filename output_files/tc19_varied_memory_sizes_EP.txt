@@ -1,0 +1,40 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |NOT_ASSIGNED |       NEW |
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  2 |NOT_ASSIGNED |       NEW |
+|                 0 |  2 |       NEW |     READY |
+|                 0 |  3 |NOT_ASSIGNED |       NEW |
+|                 0 |  3 |       NEW |     READY |
+|                 0 |  4 |NOT_ASSIGNED |       NEW |
+|                 0 |  4 |       NEW |     READY |
+|                 0 |  5 |NOT_ASSIGNED |       NEW |
+|                 0 |  5 |       NEW |     READY |
+|                 0 |  6 |NOT_ASSIGNED |       NEW |
+|                 0 |  6 |       NEW |     READY |
+|                 0 |  7 |NOT_ASSIGNED |       NEW |
+|                 0 |  8 |NOT_ASSIGNED |       NEW |
+|                 0 |  9 |NOT_ASSIGNED |       NEW |
+|                 0 |  1 |     READY |   RUNNING |
+|                99 |  1 |   RUNNING |TERMINATED |
+|               100 |  2 |     READY |   RUNNING |
+|               199 |  2 |   RUNNING |TERMINATED |
+|               200 |  3 |     READY |   RUNNING |
+|               299 |  3 |   RUNNING |TERMINATED |
+|               300 |  4 |     READY |   RUNNING |
+|               399 |  4 |   RUNNING |TERMINATED |
+|               400 |  5 |     READY |   RUNNING |
+|               499 |  5 |   RUNNING |TERMINATED |
+|               500 |  7 |       NEW |     READY |
+|               500 |  6 |     READY |   RUNNING |
+|               599 |  6 |   RUNNING |TERMINATED |
+|               600 |  8 |       NEW |     READY |
+|               600 |  7 |     READY |   RUNNING |
+|               699 |  7 |   RUNNING |TERMINATED |
+|               700 |  8 |     READY |   RUNNING |
+|               799 |  8 |   RUNNING |TERMINATED |
+|               800 |  9 |       NEW |     READY |
+|               800 |  9 |     READY |   RUNNING |
+|               899 |  9 |   RUNNING |TERMINATED |
++------------------------------------------------+

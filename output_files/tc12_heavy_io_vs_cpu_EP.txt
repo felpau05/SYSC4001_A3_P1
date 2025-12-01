@@ -1,0 +1,69 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |NOT_ASSIGNED |       NEW |
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  2 |NOT_ASSIGNED |       NEW |
+|                 0 |  2 |       NEW |     READY |
+|                 0 |  1 |     READY |   RUNNING |
+|                49 |  1 |   RUNNING |   WAITING |
+|                50 |  2 |     READY |   RUNNING |
+|                69 |  1 |   WAITING |     READY |
+|              1049 |  2 |   RUNNING |TERMINATED |
+|              1050 |  1 |     READY |   RUNNING |
+|              1099 |  1 |   RUNNING |   WAITING |
+|              1119 |  1 |   WAITING |     READY |
+|              1119 |  1 |     READY |   RUNNING |
+|              1168 |  1 |   RUNNING |   WAITING |
+|              1188 |  1 |   WAITING |     READY |
+|              1188 |  1 |     READY |   RUNNING |
+|              1237 |  1 |   RUNNING |   WAITING |
+|              1257 |  1 |   WAITING |     READY |
+|              1257 |  1 |     READY |   RUNNING |
+|              1306 |  1 |   RUNNING |   WAITING |
+|              1326 |  1 |   WAITING |     READY |
+|              1326 |  1 |     READY |   RUNNING |
+|              1375 |  1 |   RUNNING |   WAITING |
+|              1395 |  1 |   WAITING |     READY |
+|              1395 |  1 |     READY |   RUNNING |
+|              1444 |  1 |   RUNNING |   WAITING |
+|              1464 |  1 |   WAITING |     READY |
+|              1464 |  1 |     READY |   RUNNING |
+|              1513 |  1 |   RUNNING |   WAITING |
+|              1533 |  1 |   WAITING |     READY |
+|              1533 |  1 |     READY |   RUNNING |
+|              1582 |  1 |   RUNNING |   WAITING |
+|              1602 |  1 |   WAITING |     READY |
+|              1602 |  1 |     READY |   RUNNING |
+|              1651 |  1 |   RUNNING |   WAITING |
+|              1671 |  1 |   WAITING |     READY |
+|              1671 |  1 |     READY |   RUNNING |
+|              1720 |  1 |   RUNNING |   WAITING |
+|              1740 |  1 |   WAITING |     READY |
+|              1740 |  1 |     READY |   RUNNING |
+|              1789 |  1 |   RUNNING |   WAITING |
+|              1809 |  1 |   WAITING |     READY |
+|              1809 |  1 |     READY |   RUNNING |
+|              1858 |  1 |   RUNNING |   WAITING |
+|              1878 |  1 |   WAITING |     READY |
+|              1878 |  1 |     READY |   RUNNING |
+|              1927 |  1 |   RUNNING |   WAITING |
+|              1947 |  1 |   WAITING |     READY |
+|              1947 |  1 |     READY |   RUNNING |
+|              1996 |  1 |   RUNNING |   WAITING |
+|              2016 |  1 |   WAITING |     READY |
+|              2016 |  1 |     READY |   RUNNING |
+|              2065 |  1 |   RUNNING |   WAITING |
+|              2085 |  1 |   WAITING |     READY |
+|              2085 |  1 |     READY |   RUNNING |
+|              2134 |  1 |   RUNNING |   WAITING |
+|              2154 |  1 |   WAITING |     READY |
+|              2154 |  1 |     READY |   RUNNING |
+|              2203 |  1 |   RUNNING |   WAITING |
+|              2223 |  1 |   WAITING |     READY |
+|              2223 |  1 |     READY |   RUNNING |
+|              2272 |  1 |   RUNNING |   WAITING |
+|              2292 |  1 |   WAITING |     READY |
+|              2292 |  1 |     READY |   RUNNING |
+|              2341 |  1 |   RUNNING |TERMINATED |
++------------------------------------------------+

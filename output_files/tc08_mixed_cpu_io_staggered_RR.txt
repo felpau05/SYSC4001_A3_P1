@@ -1,0 +1,39 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |NOT_ASSIGNED |       NEW |
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  1 |     READY |   RUNNING |
+|                50 |  2 |NOT_ASSIGNED |       NEW |
+|                50 |  2 |       NEW |     READY |
+|                99 |  1 |   RUNNING |     READY |
+|               100 |  3 |NOT_ASSIGNED |       NEW |
+|               100 |  3 |       NEW |     READY |
+|               100 |  2 |     READY |   RUNNING |
+|               149 |  2 |   RUNNING |   WAITING |
+|               150 |  4 |NOT_ASSIGNED |       NEW |
+|               150 |  4 |       NEW |     READY |
+|               150 |  1 |     READY |   RUNNING |
+|               159 |  2 |   WAITING |     READY |
+|               249 |  1 |   RUNNING |TERMINATED |
+|               250 |  3 |     READY |   RUNNING |
+|               329 |  3 |   RUNNING |   WAITING |
+|               330 |  4 |     READY |   RUNNING |
+|               349 |  3 |   WAITING |     READY |
+|               429 |  4 |   RUNNING |     READY |
+|               430 |  2 |     READY |   RUNNING |
+|               479 |  2 |   RUNNING |   WAITING |
+|               480 |  3 |     READY |   RUNNING |
+|               489 |  2 |   WAITING |     READY |
+|               559 |  3 |   RUNNING |   WAITING |
+|               560 |  4 |     READY |   RUNNING |
+|               579 |  3 |   WAITING |     READY |
+|               659 |  4 |   RUNNING |TERMINATED |
+|               660 |  2 |     READY |   RUNNING |
+|               709 |  2 |   RUNNING |   WAITING |
+|               710 |  3 |     READY |   RUNNING |
+|               719 |  2 |   WAITING |     READY |
+|               749 |  3 |   RUNNING |TERMINATED |
+|               750 |  2 |     READY |   RUNNING |
+|               799 |  2 |   RUNNING |TERMINATED |
++------------------------------------------------+

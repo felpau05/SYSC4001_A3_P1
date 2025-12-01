@@ -1,0 +1,44 @@
++------------------------------------------------+
+|Time of Transition |PID | Old State | New State |
++------------------------------------------------+
+|                 0 |  1 |NOT_ASSIGNED |       NEW |
+|                 0 |  1 |       NEW |     READY |
+|                 0 |  1 |     READY |   RUNNING |
+|                 5 |  2 |NOT_ASSIGNED |       NEW |
+|                 5 |  2 |       NEW |     READY |
+|                10 |  3 |NOT_ASSIGNED |       NEW |
+|                10 |  3 |       NEW |     READY |
+|                15 |  4 |NOT_ASSIGNED |       NEW |
+|                15 |  4 |       NEW |     READY |
+|                20 |  5 |NOT_ASSIGNED |       NEW |
+|                20 |  5 |       NEW |     READY |
+|                25 |  6 |NOT_ASSIGNED |       NEW |
+|                30 |  7 |NOT_ASSIGNED |       NEW |
+|                35 |  8 |NOT_ASSIGNED |       NEW |
+|                40 |  9 |NOT_ASSIGNED |       NEW |
+|                45 | 10 |NOT_ASSIGNED |       NEW |
+|                49 |  1 |   RUNNING |TERMINATED |
+|                50 |  6 |       NEW |     READY |
+|                50 |  2 |     READY |   RUNNING |
+|                99 |  2 |   RUNNING |TERMINATED |
+|               100 |  7 |       NEW |     READY |
+|               100 |  3 |     READY |   RUNNING |
+|               149 |  3 |   RUNNING |TERMINATED |
+|               150 |  8 |       NEW |     READY |
+|               150 |  4 |     READY |   RUNNING |
+|               199 |  4 |   RUNNING |TERMINATED |
+|               200 |  9 |       NEW |     READY |
+|               200 |  5 |     READY |   RUNNING |
+|               249 |  5 |   RUNNING |TERMINATED |
+|               250 | 10 |       NEW |     READY |
+|               250 |  6 |     READY |   RUNNING |
+|               299 |  6 |   RUNNING |TERMINATED |
+|               300 |  7 |     READY |   RUNNING |
+|               349 |  7 |   RUNNING |TERMINATED |
+|               350 |  8 |     READY |   RUNNING |
+|               399 |  8 |   RUNNING |TERMINATED |
+|               400 |  9 |     READY |   RUNNING |
+|               449 |  9 |   RUNNING |TERMINATED |
+|               450 | 10 |     READY |   RUNNING |
+|               499 | 10 |   RUNNING |TERMINATED |
++------------------------------------------------+

@@ -284,12 +284,22 @@ PCB add_process(std::vector<std::string> tokens) {
 //Returns true if all processes in the queue have terminated
 bool all_process_terminated(std::vector<PCB> processes) {
 
-    for(auto process : processes) {
-        if(process.state != TERMINATED) {
-            return false;
+    unsigned int max_partition_size = 0;
+    for (const auto &part : memory_paritions) {
+        if (part.size > max_partition_size) {
+            max_partition_size = part.size;
         }
     }
 
+    // If process size > max_partition_size, ignore it in the termination check
+    for (const auto &p : processes) {
+        if (p.size > max_partition_size) {
+            continue;
+        }
+        if (p.state != TERMINATED) {
+            return false;
+        }
+    }
     return true;
 }
 
